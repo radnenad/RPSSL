@@ -4,7 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder
+    .Services
+    .AddControllers()
+    .AddApplicationPart(RPSSL.Presentation.AssemblyReference.Assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
