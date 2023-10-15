@@ -9,12 +9,9 @@ public static class DependencyInjection
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssemblyContaining<ApplicationAssemblyReference>();
-
-            //config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        //services.AddValidatorsFromAssembly(ApplicationAssemblyReference.Assembly);
-
+        services.AddAutoMapper(ApplicationAssemblyReference.Assembly);
         return services;
     }
 }
