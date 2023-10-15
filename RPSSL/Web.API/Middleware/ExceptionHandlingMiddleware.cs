@@ -4,18 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.API.Middleware;
 
-public class GlobalExceptionHandlingMiddleware : IMiddleware
+public class ExceptionHandlingMiddleware
 {
-    private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-    public GlobalExceptionHandlingMiddleware(ILogger<GlobalExceptionHandlingMiddleware> logger) =>
+    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger, RequestDelegate next)
+    {
         _logger = logger;
+        _next = next;
+    }
 
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await next(context);
+            await _next(context);
         }
         catch (Exception e)
         {
