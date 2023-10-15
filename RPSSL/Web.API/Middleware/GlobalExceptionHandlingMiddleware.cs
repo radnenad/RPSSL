@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RPSSL.App.Middleware;
+namespace Web.API.Middleware;
 
 public class GlobalExceptionHandlingMiddleware : IMiddleware
 {

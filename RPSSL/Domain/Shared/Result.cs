@@ -1,5 +1,8 @@
-namespace RPSSL.Domain.Shared;
+namespace Domain.Shared;
 
+// TODO split into two classes
+// TODO implement Error class
+// TODO Do I even need it for this solution?
 public class Result
 {
     public bool IsSuccess { get; }
