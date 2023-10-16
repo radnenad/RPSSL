@@ -9,7 +9,7 @@ public class GameOutcome
         Name = name;
     }
 
-    public static readonly GameOutcome Win = new("Win");
-    public static readonly GameOutcome Lose = new("Lose");
-    public static readonly GameOutcome Draw = new("Draw");
+    public static readonly GameOutcome Win = new("win");
+    public static readonly GameOutcome Lose = new("lose");
+    public static readonly GameOutcome Tie = new("tie");
 }

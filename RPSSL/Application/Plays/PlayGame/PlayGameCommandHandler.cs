@@ -23,9 +23,9 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
         return new PlayGameCommandResponse(request.PlayerGameChoice, computerChoice, outcome);
     }
     
-    private GameOutcome DetermineOutcome(GameChoice playerGameChoice, GameChoice computerGameChoice)
+    private static GameOutcome DetermineOutcome(GameChoice playerGameChoice, GameChoice computerGameChoice)
     {
-        if (playerGameChoice == computerGameChoice) return GameOutcome.Draw;
+        if (playerGameChoice == computerGameChoice) return GameOutcome.Tie;
 
         return playerGameChoice.Beats.Contains(computerGameChoice) ? GameOutcome.Win : GameOutcome.Lose;
     }

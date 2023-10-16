@@ -1,3 +1,4 @@
+using Application.Choices.Common;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Factories;
@@ -10,6 +11,8 @@ public class ChoiceMappingProfile : Profile
     {
         CreateMap<int, GameChoice>()
             .ConvertUsing(randomNumber => MapRandomNumberToChoice(randomNumber));
+
+        CreateMap<GameChoice, ChoiceResponse>().ReverseMap();
     }
 
     private static GameChoice MapRandomNumberToChoice(int randomNumber)

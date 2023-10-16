@@ -21,7 +21,7 @@ public class GetRandomChoiceQueryHandler : IRequestHandler<GetRandomChoiceQuery,
     {
         var randomNumber = await _randomNumberService.GetRandomNumber();
         var choice = _mapper.Map<GameChoice>(randomNumber);
-        var response = new ChoiceResponse(choice.Id, choice.Name);
+        var response = _mapper.Map<ChoiceResponse>(choice);
         return response;
     }
 }
