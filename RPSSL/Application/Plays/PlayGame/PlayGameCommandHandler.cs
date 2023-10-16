@@ -1,32 +1,37 @@
-using Application.Choices.GetRandomChoice;
+using AutoMapper;
 using Domain.Entities;
-using Domain.Factories;
+using Infrastructure.Abstractions;
 using MediatR;
 
 namespace Application.Plays.PlayGame;
 
 public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameCommandResponse>
 {
-    private readonly ISender _sender;
+    private readonly IRandomNumberService _randomNumberService;
+    private readonly IMapper _mapper;
 
-    public PlayGameCommandHandler(ISender sender)
+    public PlayGameCommandHandler(IRandomNumberService randomNumberService, IMapper mapper)
     {
-        _sender = sender;
+        _randomNumberService = randomNumberService;
+        _mapper = mapper;
     }
 
     public async Task<PlayGameCommandResponse> Handle(PlayGameCommand request, CancellationToken cancellationToken)
     {
-        var computerChoiceResponse = await _sender.Send(new GetRandomChoiceQuery(), cancellationToken);
-        var computerChoice = ChoiceFactory.FromId(computerChoiceResponse.Id);
-        
-        var outcome  = DetermineOutcome(request.PlayerChoice, computerChoice);
+        var computerChoice = await GetComputerChoice();
+        var outcome  = EvaluateGameResult(request.PlayerChoice, computerChoice);
         return new PlayGameCommandResponse(request.PlayerChoice, computerChoice, outcome);
     }
-    
-    private static Outcome DetermineOutcome(Choice playerChoice, Choice computerChoice)
+
+    private async Task<Choice> GetComputerChoice()
+    {
+        var randomNumber = await _randomNumberService.GetRandomNumber();
+        return _mapper.Map<Choice>(randomNumber);
+    }
+
+    private static Outcome EvaluateGameResult(Choice playerChoice, Choice computerChoice)
     {
         if (playerChoice == computerChoice) return Outcome.Tie;
-
         return playerChoice.Beats.Contains(computerChoice) ? Outcome.Win : Outcome.Lose;
     }
 
