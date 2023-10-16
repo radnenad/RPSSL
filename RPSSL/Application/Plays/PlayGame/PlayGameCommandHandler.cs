@@ -1,5 +1,6 @@
 using Application.Choices.GetRandomChoice;
 using Domain.Entities;
+using Domain.Factories;
 using MediatR;
 
 namespace Application.Plays.PlayGame;
@@ -16,30 +17,17 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
     public async Task<PlayGameCommandResponse> Handle(PlayGameCommand request, CancellationToken cancellationToken)
     {
         var computerChoiceResponse = await _sender.Send(new GetRandomChoiceQuery(), cancellationToken);
-        var computerChoice = computerChoiceResponse.Id;
-        var outcome  = DetermineOutcome(request.PlayerChoice, computerChoice);
-        return new PlayGameCommandResponse(request.PlayerChoice, computerChoice, outcome);
+        var computerChoice = GameChoiceFactory.FromId(computerChoiceResponse.Id);
+        
+        var outcome  = DetermineOutcome(request.PlayerGameChoice, computerChoice);
+        return new PlayGameCommandResponse(request.PlayerGameChoice, computerChoice, outcome);
     }
     
-    private static Outcome DetermineOutcome(Choice userChoice, Choice computerChoice)
+    private GameOutcome DetermineOutcome(GameChoice playerGameChoice, GameChoice computerGameChoice)
     {
-        if (userChoice == computerChoice) return Outcome.Tie;
+        if (playerGameChoice == computerGameChoice) return GameOutcome.Draw;
 
-        switch (userChoice)
-        {
-            case Choice.Rock:
-                return computerChoice is Choice.Scissors or Choice.Lizard ? Outcome.Win : Outcome.Lose;
-            case Choice.Paper:
-                return computerChoice is Choice.Rock or Choice.Spock ? Outcome.Win : Outcome.Lose;
-            case Choice.Scissors:
-                return computerChoice is Choice.Paper or Choice.Lizard ? Outcome.Win : Outcome.Lose;
-            case Choice.Lizard:
-                return computerChoice is Choice.Spock or Choice.Paper ? Outcome.Win : Outcome.Lose;
-            case Choice.Spock:
-                return computerChoice is Choice.Scissors or Choice.Rock ? Outcome.Win : Outcome.Lose;
-            default:
-                throw new Exception("Invalid choice"); // TODO: Replace with custom exception
-        }
+        return playerGameChoice.Beats.Contains(computerGameChoice) ? GameOutcome.Win : GameOutcome.Lose;
     }
 
 }

@@ -1,6 +1,6 @@
-using Application.Choices.Common;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Factories;
 
 namespace Application.Mappings;
 
@@ -8,31 +8,23 @@ public class ChoiceMappingProfile : Profile
 {
     public ChoiceMappingProfile()
     {
-        CreateMap<int, Choice>()
+        CreateMap<int, GameChoice>()
             .ConvertUsing(randomNumber => MapRandomNumberToChoice(randomNumber));
-
-        CreateMap<Choice, ChoiceResponse>()
-            .ConstructUsing(src => new ChoiceResponse(src, src.ToString().ToLower()));
     }
 
-    //TODO improve the algorithm
-    private static Choice MapRandomNumberToChoice(int randomNumber)
+    private static GameChoice MapRandomNumberToChoice(int randomNumber)
     {
-        switch (randomNumber)
+        if (randomNumber is < 1 or > 100)
+            throw new ArgumentOutOfRangeException(nameof(randomNumber));
+
+        return randomNumber switch
         {
-            case < 1:
-            case > 100:
-                throw new ArgumentOutOfRangeException(nameof(randomNumber));
-            case <= 20:
-                return Choice.Rock;
-            case <= 40:
-                return Choice.Paper;
-            case <= 60:
-                return Choice.Scissors;
-            case <= 80:
-                return Choice.Lizard;
-            default:
-                return Choice.Spock;
-        }
+            <= 20 => GameChoiceFactory.Rock,
+            <= 40 => GameChoiceFactory.Paper,
+            <= 60 => GameChoiceFactory.Scissors,
+            <= 80 => GameChoiceFactory.Lizard,
+            _ => GameChoiceFactory.Spock
+        };
     }
+
 }

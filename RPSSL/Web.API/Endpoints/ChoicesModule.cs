@@ -2,7 +2,6 @@ using Application.Choices.GetAllChoices;
 using Application.Choices.GetRandomChoice;
 using Carter;
 using MediatR;
-using Web.API.Contracts;
 
 namespace Web.API.Endpoints;
 

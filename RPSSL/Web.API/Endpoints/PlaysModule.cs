@@ -1,6 +1,8 @@
 using Application.Plays.PlayGame;
 using AutoMapper;
 using Carter;
+using Domain.Entities;
+using Domain.Factories;
 using MediatR;
 using Web.API.Contracts;
 
@@ -12,13 +14,13 @@ public class PlaysModule : ICarterModule
     {
         app.MapPost("play", async (PlayGameRequest request, ISender sender, IMapper mapper) =>
         {
-            var command = mapper.Map<PlayGameCommand>(request);
+            var command = new PlayGameCommand(GameChoiceFactory.FromId(request.PlayerChoice));
             var response = await sender.Send(command);
             
             var result = new PlayGameResult(
-                response.Outcome.ToString().ToLower(), 
-                (int)response.PlayerChoice,
-                (int)response.ComputerChoice);
+                response.Outcome.Name, 
+                response.PlayerGameChoice.Id,
+                response.ComputerGameChoice.Id);
             
             return Results.Ok(result);
         });

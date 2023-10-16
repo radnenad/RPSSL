@@ -1,5 +1,5 @@
 using Application.Choices.Common;
-using Domain.Entities;
+using Domain.Factories;
 using MediatR;
 
 namespace Application.Choices.GetAllChoices;
@@ -8,11 +8,9 @@ internal sealed class GetAllChoicesQueryHandler : IRequestHandler<GetAllChoicesQ
 {
     public Task<IEnumerable<ChoiceResponse>> Handle(GetAllChoicesQuery request, CancellationToken cancellationToken)
     {
-        var choices = Enum.GetValues(typeof(Choice))
-            .Cast<Choice>()
-            .Select(choice => new ChoiceResponse(choice, choice.ToString().ToLower()))
-            .ToList();
-
-        return Task.FromResult<IEnumerable<ChoiceResponse>>(choices);
+        var allChoices = GameChoiceFactory.GetAll();
+        var choiceResponseList = allChoices.Select(c => new ChoiceResponse(c.Id, c.Name));
+        
+        return Task.FromResult(choiceResponseList);
     }
 }
