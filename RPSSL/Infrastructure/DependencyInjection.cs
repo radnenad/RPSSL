@@ -10,13 +10,20 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient();
-
-        services.AddScoped<IRandomNumberService, RandomNumberService>();
+        services.AddTransient<IRandomNumberService, RandomNumberService>();
+        services.AddTransient<IRandomNumberFetcher, RandomNumberFetcher>();
+        services.AddTransient<IRandomNumberGenerator, RandomNumberGenerator>();
+        services.AddTransient<IRandomNumberParser, RandomNumberParses>();
 
         var randomNumberApiConfig = new RandomNumberApiConfig();
         configuration.GetSection("RandomNumberApi").Bind(randomNumberApiConfig);
         services.AddSingleton(randomNumberApiConfig);
+
+        services.AddHttpClient("RandomNumberHttpClient",
+            client =>
+            {
+                client.BaseAddress = new Uri(randomNumberApiConfig.BaseUrl ?? throw new InvalidOperationException());
+            });
 
         return services;
     }

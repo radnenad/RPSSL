@@ -15,6 +15,7 @@ public class ChoiceProfile : Profile
     }
 
 
+    //TODO improve the algorithm
     private static Choice MapRandomNumberToChoice(int randomNumber)
     {
         switch (randomNumber)

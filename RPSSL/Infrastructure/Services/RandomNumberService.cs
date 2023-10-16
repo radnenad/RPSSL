@@ -1,6 +1,4 @@
-using System.Text.Json;
 using Infrastructure.Abstractions;
-using Infrastructure.Configurations;
 using Polly;
 using Polly.Fallback;
 
@@ -8,43 +6,29 @@ namespace Infrastructure.Services;
 
 public class RandomNumberService : IRandomNumberService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IRandomNumberFetcher _fetcher;
+    private readonly IRandomNumberParser _parser;
     private readonly AsyncFallbackPolicy<int> _fallbackPolicy;
 
-    private static readonly Random RandomNumberGenerator = new();
-
-    public RandomNumberService(IHttpClientFactory httpClientFactory, RandomNumberApiConfig randomNumberApiConfig)
+    public RandomNumberService(
+        IRandomNumberFetcher fetcher, 
+        IRandomNumberGenerator generator, 
+        IRandomNumberParser parser)
     {
-        _httpClient = httpClientFactory.CreateClient("RandomNumberHttpClient");
-        _httpClient.BaseAddress = new Uri(
-            randomNumberApiConfig.BaseUrl ??
-            throw new InvalidOperationException("BaseUrl must be configured."));
-
+        _fetcher = fetcher;
+        _parser = parser;
+        
         _fallbackPolicy = Policy<int>
-            .Handle<HttpRequestException>()
-            .FallbackAsync(GenerateInternalRandomNumberAsync);
+            .Handle<Exception>()
+            .FallbackAsync(_ =>Task.FromResult(generator.Generate()));
     }
 
     public async Task<int> GetRandomNumber()
     {
         return await _fallbackPolicy.ExecuteAsync(async () =>
         {
-            var response = await _httpClient.GetAsync("/random");
-            response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return ExtractNumberFromResponse(content);
+            var response = await _fetcher.FetchRandomNumberAsync();
+            return _parser.Parse(response);
         });
-    }
-
-    private static Task<int> GenerateInternalRandomNumberAsync(CancellationToken cancellationToken)
-    {
-        var randomValue = RandomNumberGenerator.Next(1, 101);
-        return Task.FromResult(randomValue);
-    }
-
-    private static int ExtractNumberFromResponse(string response)
-    {
-        var jsonDoc = JsonDocument.Parse(response);
-        return jsonDoc.RootElement.GetProperty("random_number").GetInt32();
     }
 }
