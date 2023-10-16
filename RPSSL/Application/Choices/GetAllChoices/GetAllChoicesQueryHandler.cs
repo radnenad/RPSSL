@@ -8,9 +8,9 @@ internal sealed class GetAllChoicesQueryHandler : IRequestHandler<GetAllChoicesQ
 {
     public Task<IEnumerable<ChoiceResponse>> Handle(GetAllChoicesQuery request, CancellationToken cancellationToken)
     {
-        var choices = Enum.GetValues(typeof(ChoiceEnum))
-            .Cast<ChoiceEnum>()
-            .Select(choice => new ChoiceResponse((int)choice, choice.ToString().ToLower()))
+        var choices = Enum.GetValues(typeof(Choice))
+            .Cast<Choice>()
+            .Select(choice => new ChoiceResponse(choice, choice.ToString().ToLower()))
             .ToList();
 
         return Task.FromResult<IEnumerable<ChoiceResponse>>(choices);

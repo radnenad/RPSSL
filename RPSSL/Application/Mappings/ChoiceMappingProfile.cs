@@ -4,16 +4,16 @@ using Domain.Entities;
 
 namespace Application.Mappings;
 
-public class ChoiceProfile : Profile
+public class ChoiceMappingProfile : Profile
 {
-    public ChoiceProfile()
+    public ChoiceMappingProfile()
     {
         CreateMap<int, Choice>()
             .ConvertUsing(randomNumber => MapRandomNumberToChoice(randomNumber));
 
-        CreateMap<Choice, ChoiceResponse>().ReverseMap();
+        CreateMap<Choice, ChoiceResponse>()
+            .ConstructUsing(src => new ChoiceResponse(src, src.ToString().ToLower()));
     }
-
 
     //TODO improve the algorithm
     private static Choice MapRandomNumberToChoice(int randomNumber)

@@ -17,7 +17,6 @@ public static class DependencyInjection
 
         var randomNumberApiConfig = new RandomNumberApiConfig();
         configuration.GetSection("RandomNumberApi").Bind(randomNumberApiConfig);
-        services.AddSingleton(randomNumberApiConfig);
 
         services.AddHttpClient("RandomNumberHttpClient",
             client =>

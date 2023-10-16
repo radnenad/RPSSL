@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.API.Middleware;
 
+//TODO improve it
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
