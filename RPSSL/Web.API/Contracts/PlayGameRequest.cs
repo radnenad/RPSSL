@@ -5,5 +5,5 @@ namespace Web.API.Contracts;
 public record PlayGameRequest
 {
     [JsonPropertyName("player")]
-    public int PlayerChoice { get; set; }
+    public int PlayerChoiceId { get; set; }
 }

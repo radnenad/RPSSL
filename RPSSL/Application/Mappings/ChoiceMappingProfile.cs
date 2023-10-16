@@ -9,24 +9,24 @@ public class ChoiceMappingProfile : Profile
 {
     public ChoiceMappingProfile()
     {
-        CreateMap<int, GameChoice>()
+        CreateMap<int, Choice>()
             .ConvertUsing(randomNumber => MapRandomNumberToChoice(randomNumber));
 
-        CreateMap<GameChoice, ChoiceResponse>().ReverseMap();
+        CreateMap<Choice, ChoiceResponse>().ReverseMap();
     }
 
-    private static GameChoice MapRandomNumberToChoice(int randomNumber)
+    private static Choice MapRandomNumberToChoice(int randomNumber)
     {
         if (randomNumber is < 1 or > 100)
             throw new ArgumentOutOfRangeException(nameof(randomNumber));
 
         return randomNumber switch
         {
-            <= 20 => GameChoiceFactory.Rock,
-            <= 40 => GameChoiceFactory.Paper,
-            <= 60 => GameChoiceFactory.Scissors,
-            <= 80 => GameChoiceFactory.Lizard,
-            _ => GameChoiceFactory.Spock
+            <= 20 => ChoiceFactory.Rock,
+            <= 40 => ChoiceFactory.Paper,
+            <= 60 => ChoiceFactory.Scissors,
+            <= 80 => ChoiceFactory.Lizard,
+            _ => ChoiceFactory.Spock
         };
     }
 

@@ -16,7 +16,7 @@ internal sealed class GetAllChoicesQueryHandler : IRequestHandler<GetAllChoicesQ
 
     public Task<IEnumerable<ChoiceResponse>> Handle(GetAllChoicesQuery request, CancellationToken cancellationToken)
     {
-        var allChoices = GameChoiceFactory.GetAll();
+        var allChoices = ChoiceFactory.GetAll();
         var choiceResponseList = _mapper.Map<IEnumerable<ChoiceResponse>>(allChoices);
         
         return Task.FromResult(choiceResponseList);

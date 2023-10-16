@@ -2,15 +2,15 @@ using Domain.Entities;
 
 namespace Domain.Factories;
 
-public static class GameChoiceFactory
+public static class ChoiceFactory
 {
-    public static readonly GameChoice Rock = new(1, "rock");
-    public static readonly GameChoice Paper = new(2, "paper");
-    public static readonly GameChoice Scissors = new(3, "scissors");
-    public static readonly GameChoice Lizard = new(4, "lizard");
-    public static readonly GameChoice Spock = new(5, "spock");
+    public static readonly Choice Rock = new(1, "rock");
+    public static readonly Choice Paper = new(2, "paper");
+    public static readonly Choice Scissors = new(3, "scissors");
+    public static readonly Choice Lizard = new(4, "lizard");
+    public static readonly Choice Spock = new(5, "spock");
 
-    static GameChoiceFactory()
+    static ChoiceFactory()
     {
         Rock.Beats.AddRange(new[] { Scissors, Lizard });
         Paper.Beats.AddRange(new[] { Rock, Spock });
@@ -19,7 +19,7 @@ public static class GameChoiceFactory
         Spock.Beats.AddRange(new[] { Scissors, Rock });
     }
 
-    public static GameChoice FromId(int id)
+    public static Choice FromId(int id)
     {
         return id switch
         {
@@ -32,5 +32,5 @@ public static class GameChoiceFactory
         };
     }
     
-    public static IEnumerable<GameChoice> GetAll() => new[] { Rock, Paper, Scissors, Lizard, Spock };
+    public static IEnumerable<Choice> GetAll() => new[] { Rock, Paper, Scissors, Lizard, Spock };
 }

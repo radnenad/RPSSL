@@ -17,17 +17,17 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
     public async Task<PlayGameCommandResponse> Handle(PlayGameCommand request, CancellationToken cancellationToken)
     {
         var computerChoiceResponse = await _sender.Send(new GetRandomChoiceQuery(), cancellationToken);
-        var computerChoice = GameChoiceFactory.FromId(computerChoiceResponse.Id);
+        var computerChoice = ChoiceFactory.FromId(computerChoiceResponse.Id);
         
-        var outcome  = DetermineOutcome(request.PlayerGameChoice, computerChoice);
-        return new PlayGameCommandResponse(request.PlayerGameChoice, computerChoice, outcome);
+        var outcome  = DetermineOutcome(request.PlayerChoice, computerChoice);
+        return new PlayGameCommandResponse(request.PlayerChoice, computerChoice, outcome);
     }
     
-    private static GameOutcome DetermineOutcome(GameChoice playerGameChoice, GameChoice computerGameChoice)
+    private static Outcome DetermineOutcome(Choice playerChoice, Choice computerChoice)
     {
-        if (playerGameChoice == computerGameChoice) return GameOutcome.Tie;
+        if (playerChoice == computerChoice) return Outcome.Tie;
 
-        return playerGameChoice.Beats.Contains(computerGameChoice) ? GameOutcome.Win : GameOutcome.Lose;
+        return playerChoice.Beats.Contains(computerChoice) ? Outcome.Win : Outcome.Lose;
     }
 
 }

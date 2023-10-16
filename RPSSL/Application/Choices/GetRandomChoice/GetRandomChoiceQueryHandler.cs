@@ -20,7 +20,7 @@ public class GetRandomChoiceQueryHandler : IRequestHandler<GetRandomChoiceQuery,
     public async Task<ChoiceResponse> Handle(GetRandomChoiceQuery request, CancellationToken cancellationToken)
     {
         var randomNumber = await _randomNumberService.GetRandomNumber();
-        var choice = _mapper.Map<GameChoice>(randomNumber);
+        var choice = _mapper.Map<Choice>(randomNumber);
         var response = _mapper.Map<ChoiceResponse>(choice);
         return response;
     }
