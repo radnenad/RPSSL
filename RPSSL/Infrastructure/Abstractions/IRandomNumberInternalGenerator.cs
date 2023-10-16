@@ -1,6 +1,6 @@
 namespace Infrastructure.Abstractions;
 
-public interface IRandomNumberGenerator
+public interface IRandomNumberInternalGenerator
 {
     int Generate();
 }

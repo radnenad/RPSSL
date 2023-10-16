@@ -12,7 +12,7 @@ public class RandomNumberService : IRandomNumberService
 
     public RandomNumberService(
         IRandomNumberFetcher fetcher, 
-        IRandomNumberGenerator generator, 
+        IRandomNumberInternalGenerator internalGenerator, 
         IRandomNumberParser parser)
     {
         _fetcher = fetcher;
@@ -20,7 +20,7 @@ public class RandomNumberService : IRandomNumberService
         
         _fallbackPolicy = Policy<int>
             .Handle<Exception>()
-            .FallbackAsync(_ =>Task.FromResult(generator.Generate()));
+            .FallbackAsync(_ =>Task.FromResult(internalGenerator.Generate()));
     }
 
     public async Task<int> GetRandomNumber()

@@ -12,8 +12,8 @@ public static class DependencyInjection
     {
         services.AddTransient<IRandomNumberService, RandomNumberService>();
         services.AddTransient<IRandomNumberFetcher, RandomNumberFetcher>();
-        services.AddTransient<IRandomNumberGenerator, RandomNumberGenerator>();
-        services.AddTransient<IRandomNumberParser, RandomNumberParses>();
+        services.AddTransient<IRandomNumberInternalGenerator, RandomNumberInternalGenerator>();
+        services.AddTransient<IRandomNumberParser, RandomNumberParser>();
 
         var randomNumberApiConfig = new RandomNumberApiConfig();
         configuration.GetSection("RandomNumberApi").Bind(randomNumberApiConfig);

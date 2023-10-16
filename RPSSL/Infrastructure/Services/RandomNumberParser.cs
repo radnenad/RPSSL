@@ -3,7 +3,7 @@ using Infrastructure.Abstractions;
 
 namespace Infrastructure.Services;
 
-public class RandomNumberParses : IRandomNumberParser
+public class RandomNumberParser : IRandomNumberParser
 {
     public int Parse(string content)
     {
