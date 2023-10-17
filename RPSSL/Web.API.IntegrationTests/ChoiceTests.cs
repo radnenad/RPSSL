@@ -26,7 +26,7 @@ public class ChoiceTests : BaseIntegrationTest
     }
     
     [Fact]
-    public async Task GetAllChoices_ShouldReturnChoice()
+    public async Task GetRandomChoices_ShouldReturnValidChoice()
     {
         var query = new GetRandomChoiceQuery();
         var choice = await Sender.Send(query);
