@@ -2,6 +2,7 @@ using Application;
 using Carter;
 using Infrastructure;
 using Persistence;
+using Web.API.Extensions;
 using Web.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,17 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "DevelopmentCorsPolicy",
-        corsPolicyBuilder =>
-        {
-            corsPolicyBuilder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+builder.Services.AddCorsPolicy();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -36,13 +27,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("DevelopmentCorsPolicy");
+app.UseCorsPolicy();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<UserIdentifierMiddleware>();
 
 app.MapCarter();
-
+    
 app.Run();
 
 public partial class Program { }

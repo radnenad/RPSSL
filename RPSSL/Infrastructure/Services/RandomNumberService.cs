@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Infrastructure.Abstractions;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.CircuitBreaker;
 using Polly.Fallback;
@@ -11,10 +12,13 @@ public class RandomNumberService : IRandomNumberService
     private readonly IRandomNumberFetcher _fetcher;
     private readonly AsyncCircuitBreakerPolicy<int> _circuitBreakerPolicy;
     private readonly AsyncFallbackPolicy<int> _fallbackPolicy;
+    private readonly ILogger<RandomNumberService> _logger;
 
-    public RandomNumberService(IRandomNumberFetcher fetcher, IRandomNumberInternalGenerator internalGenerator)
+    public RandomNumberService(IRandomNumberFetcher fetcher, IRandomNumberInternalGenerator internalGenerator,
+        ILogger<RandomNumberService> logger)
     {
         _fetcher = fetcher;
+        _logger = logger;
 
         // Using a Circuit Breaker policy with Polly to enhance the resilience of our service.
         // This policy breaks the circuit after 3 consecutive exceptions and remains broken for 1 minute.
@@ -23,10 +27,15 @@ public class RandomNumberService : IRandomNumberService
         _circuitBreakerPolicy = Policy<int>
             .Handle<Exception>()
             .CircuitBreakerAsync(3, TimeSpan.FromMinutes(1));
-        
+
         _fallbackPolicy = Policy<int>
             .Handle<Exception>()
-            .FallbackAsync(_ => Task.FromResult(internalGenerator.Generate()));
+            .FallbackAsync(_ =>
+            {
+                _logger.LogWarning(
+                    "Falling back to internal random number generator due to external service failure.");
+                return Task.FromResult(internalGenerator.Generate());
+            });
     }
 
     public async Task<int> GetRandomNumber()
