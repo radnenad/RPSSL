@@ -1,5 +1,4 @@
 using Infrastructure.Abstractions;
-using Infrastructure.Configurations;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,22 +7,19 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IRandomNumberService, RandomNumberService>();
         services.AddTransient<IRandomNumberFetcher, RandomNumberFetcher>();
         services.AddTransient<IRandomNumberInternalGenerator, RandomNumberInternalGenerator>();
-        services.AddTransient<IRandomNumberParser, RandomNumberParser>();
 
-        var randomNumberApiConfig = new RandomNumberApiConfig();
-        configuration.GetSection("RandomNumberApi").Bind(randomNumberApiConfig);
+        var baseUrl = configuration.GetSection("RandomNumberApi").GetValue<string>("BaseUrl")
+                      ?? throw new InvalidOperationException("Configuration for HTTP client is missing");
 
         services.AddHttpClient("RandomNumberHttpClient",
             client =>
             {
-                client.BaseAddress = new Uri(randomNumberApiConfig.BaseUrl ?? throw new InvalidOperationException());
+                client.BaseAddress = new Uri(baseUrl);
             });
-
-        return services;
     }
 }

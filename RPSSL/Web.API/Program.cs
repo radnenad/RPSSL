@@ -2,7 +2,6 @@ using Application;
 using Carter;
 using Infrastructure;
 using Persistence;
-using Web.API;
 using Web.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);

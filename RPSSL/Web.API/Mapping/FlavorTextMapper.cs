@@ -11,13 +11,9 @@ public static class FlavorTextMapper
             return $"Both chose {playerChoice.Name}. It's a tie!";
         }
     
-        if (outcome == Outcome.Win)
-        {
-            return GetWinningMessage(playerChoice, computerChoice);
-        }
-    
-        // If not a tie or a win, it must be a loss
-        return GetLosingMessage(playerChoice, computerChoice);
+        return outcome == Outcome.Win 
+            ? GetWinningMessage(playerChoice, computerChoice) 
+            : GetLosingMessage(playerChoice, computerChoice);
     }
 
     private static string GetWinningMessage(Choice playerChoice, Choice computerChoice)

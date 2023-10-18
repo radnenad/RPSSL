@@ -35,7 +35,7 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
     private void SaveGameResult(PlayGameCommand request, Choice computerChoice, Outcome outcome)
     {
         var gameResult =
-            new GameResult(request.PlayerId, request.PlayerChoice, computerChoice, outcome, DateTime.UtcNow);
+            new GameResult(request.PlayerId, request.PlayerChoice, computerChoice, outcome);
         _gameResultRepository.AddResult(gameResult);
     }
 }
