@@ -41,7 +41,8 @@ public static class ChoiceFactory
         if (randomNumber is < 1 or > 100)
             throw new ArgumentOutOfRangeException(nameof(randomNumber));
 
-        var choiceId = randomNumber % 5 + 1;
+        // With modulo operator we ensure that the number is between 1 and 5.
+        var choiceId = randomNumber % 5 + 1; 
         return FromId(choiceId);
     }
     
