@@ -20,7 +20,7 @@ public class PlayTests : BaseIntegrationTest
     public async Task PlayGame_ShouldReturnResponse_WhenChoiceIsValid(int choiceId)
     {
         var validChoice = ChoiceFactory.FromId(choiceId);
-        var request = new PlayGameCommand(validChoice);
+        var request = new PlayGameCommand("id", validChoice); //TODO use a fixture for this
         var response = await Sender.Send(request);
         
         Assert.NotNull(response);

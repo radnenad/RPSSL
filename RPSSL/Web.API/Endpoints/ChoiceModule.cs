@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Web.API.Endpoints;
 
-public class ChoicesModule : ICarterModule
+public class ChoiceModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {

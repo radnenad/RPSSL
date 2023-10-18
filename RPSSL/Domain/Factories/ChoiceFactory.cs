@@ -31,6 +31,21 @@ public static class ChoiceFactory
             _ => throw new ArgumentException($"Invalid choice ID: {id}"),
         };
     }
+
+    public static Choice FromRandomNumber(int randomNumber)
+    {
+        if (randomNumber is < 1 or > 100)
+            throw new ArgumentOutOfRangeException(nameof(randomNumber));
+
+        return randomNumber switch
+        {
+            <= 20 => Rock,
+            <= 40 => Paper,
+            <= 60 => Scissors,
+            <= 80 => Lizard,
+            _ => Spock
+        };
+    }
     
     public static IEnumerable<Choice> GetAll() => new[] { Rock, Paper, Scissors, Lizard, Spock };
 }

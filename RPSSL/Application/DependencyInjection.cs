@@ -14,8 +14,7 @@ public static class DependencyInjection
         {
             config.RegisterServicesFromAssemblyContaining<ApplicationAssemblyReference>();
         });
-
-        services.AddAutoMapper(ApplicationAssemblyReference.Assembly);
+        
         return services;
     }
 }

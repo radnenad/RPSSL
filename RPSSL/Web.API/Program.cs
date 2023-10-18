@@ -1,6 +1,7 @@
 using Application;
 using Carter;
 using Infrastructure;
+using Persistence;
 using Web.API;
 using Web.API.Middleware;
 
@@ -23,7 +24,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddAutoMapper(WebApiAssemblyReference.Assembly);
+builder.Services.AddPersistence();
 builder.Services.AddCarter();
 
 var app = builder.Build();
@@ -39,6 +40,7 @@ app.UseHttpsRedirection();
 app.UseCors("DevelopmentCorsPolicy");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<UserIdentifierMiddleware>();
 
 app.MapCarter();
 

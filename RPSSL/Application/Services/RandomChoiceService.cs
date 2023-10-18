@@ -1,6 +1,6 @@
 using Application.Abstractions;
-using AutoMapper;
 using Domain.Entities;
+using Domain.Factories;
 using Infrastructure.Abstractions;
 
 namespace Application.Services;
@@ -8,17 +8,15 @@ namespace Application.Services;
 public class RandomChoiceService : IRandomChoiceService
 {
     private readonly IRandomNumberService _randomNumberService;
-    private readonly IMapper _mapper;
 
-    public RandomChoiceService(IRandomNumberService randomNumberService, IMapper mapper)
+    public RandomChoiceService(IRandomNumberService randomNumberService)
     {
         _randomNumberService = randomNumberService;
-        _mapper = mapper;
     }
 
     public async Task<Choice> GetRandomChoice()
     {
         var randomNumber = await _randomNumberService.GetRandomNumber();
-        return _mapper.Map<Choice>(randomNumber);
+        return ChoiceFactory.FromRandomNumber(randomNumber);
     }
 }

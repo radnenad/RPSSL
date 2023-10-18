@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Plays.PlayGame;
 
-public record PlayGameCommand(Choice PlayerChoice) : IRequest<PlayGameCommandResponse>;
+public record PlayGameCommand(string PlayerId, Choice PlayerChoice) : IRequest<PlayGameCommandResponse>;
