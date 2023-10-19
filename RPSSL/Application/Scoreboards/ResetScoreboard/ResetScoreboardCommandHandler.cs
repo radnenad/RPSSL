@@ -17,6 +17,6 @@ public class ResetScoreboardCommandHandler : IRequestHandler<ResetScoreBoardComm
     {
         return _resultRepository.ResetPlayerScoreboard(request.PlayerId)
             ? Task.FromResult(Result.Success())
-            : Task.FromResult(Result.Failure("Player not found"));
+            : Task.FromResult(Result.Failure("Player data not found. Nothing to reset."));
     }
 }

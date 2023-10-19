@@ -45,7 +45,7 @@ public class PlayTests : BaseIntegrationTest
     }
     
     [Fact]
-    public async Task PlayGame_ShouldThrowValidationException_WhenPlayerIdIsNullOrEmpty()
+    public async Task PlayGame_ShouldThrowValidationException_WhenPlayerIdIsEmpty()
     {
         var command = new PlayGameCommand("", 1);
              
