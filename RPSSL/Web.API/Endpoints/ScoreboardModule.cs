@@ -1,7 +1,8 @@
+using Application.Scoreboards.GetScoreboard;
 using Carter;
 using Domain.Repositories;
-using Web.API.Contracts;
-using Web.API.Mapping;
+using MediatR;
+using Web.API.Extensions;
 
 namespace Web.API.Endpoints;
 
@@ -9,23 +10,18 @@ public class ScoreboardModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("scoreboard", (IGameResultRepository repository, HttpContext context) =>
+        app.MapGet("scoreboard", async (ISender sender, HttpContext context) =>
         {
-            var playerId = context.Items["UserIdentifier"] as string ?? string.Empty;
+            var playerId = context.GetUserId();
 
-            var response = repository.GetRecentResultsForPlayer(playerId);
-
-            var result = response.Select(s => new GameResultDto(
-                FlavorTextMapper.GetFlavorText(s.PlayerChoice, s.ComputerChoice, s.Outcome),
-                s.PlayerChoice.Id,
-                s.ComputerChoice.Id));
-
-            return Results.Ok(result);
+            var query = new GetScoreboardQuery(playerId);
+            var response = await sender.Send(query);
+            return Results.Ok(response);
         });
 
         app.MapPut("scoreboard/reset", (IGameResultRepository repository, HttpContext context) =>
         {
-            var playerId = context.Items["UserIdentifier"] as string ?? string.Empty;
+            var playerId = context.GetUserId();
 
             repository.ResetPlayerScoreboard(playerId);
 

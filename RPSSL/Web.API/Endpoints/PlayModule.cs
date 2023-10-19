@@ -20,7 +20,12 @@ public class PlayModule : ICarterModule
 
             var command = new PlayGameCommand(playerId, choice);
             var response = await sender.Send(command);
-            var result = new GameResultDto(response.Outcome.Name, response.PlayerChoice.Id, response.ComputerChoice.Id);
+            
+            var result = new GameResultDto(
+                response.Outcome.Name, 
+                response.PlayerChoice.Id, 
+                response.ComputerChoice.Id);
+            
             return Results.Ok(result);
         });
     }

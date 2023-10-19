@@ -1,20 +1,47 @@
 using Domain.Entities;
 
-namespace Web.API.Mapping;
+namespace Application.Mappings;
+
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
 public static class FlavorTextMapper
 {
+    private static readonly List<string> WinningFlavors = new()
+    {
+        "Awesome job!",
+        "You nailed it!",
+        "Epic move!",
+        "Fantastic choice!",
+        "Unbeatable move!"
+    };
+
+    private static readonly List<string> LosingFlavors = new()
+    {
+        "Nice try!",
+        "Almost had it!",
+        "Give it another go!",
+        "You'll get them next time!",
+        "Keep pushing!"
+    };
+
     public static string GetFlavorText(Choice playerChoice, Choice computerChoice, Outcome outcome)
     {
         if (outcome == Outcome.Tie)
         {
             return $"Both chose {playerChoice.Name}. It's a tie!";
         }
-    
+
         return outcome == Outcome.Win 
-            ? GetWinningMessage(playerChoice, computerChoice) 
-            : GetLosingMessage(playerChoice, computerChoice);
+            ? $"{GetWinningMessage(playerChoice, computerChoice)} {GetRandomWinningFlavorText()}" 
+            : $"{GetLosingMessage(playerChoice, computerChoice)} {GetRandomLosingFlavorText()}";
     }
+
+    private static string GetRandomWinningFlavorText() 
+        => WinningFlavors[RandomNumberGenerator.GetInt32(WinningFlavors.Count)];
+
+    private static string GetRandomLosingFlavorText() 
+        => LosingFlavors[RandomNumberGenerator.GetInt32(LosingFlavors.Count)];
 
     private static string GetWinningMessage(Choice playerChoice, Choice computerChoice)
     {
