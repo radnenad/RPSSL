@@ -1,0 +1,16 @@
+﻿/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Contracts/PlayGameRequest.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Endpoints/ChoiceModule.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Endpoints/PlayModule.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Endpoints/ScoreboardModule.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Extensions/CorsPolicyExtensions.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Extensions/HttpContextExtensions.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Middleware/ExceptionHandlingMiddleware.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Middleware/UserIdentifierMiddleware.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Program.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/obj/Debug/net7.0/Web.API.GlobalUsings.g.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/obj/Debug/net7.0/Web.API.AssemblyInfo.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/obj/Debug/net7.0/Web.API.MvcApplicationPartsAssemblyInfo.cs
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/appsettings.Development.json
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/appsettings.json
+/Users/nenadrad/Code/billups/repo/RPSSL/Web.API/Properties/launchSettings.json
