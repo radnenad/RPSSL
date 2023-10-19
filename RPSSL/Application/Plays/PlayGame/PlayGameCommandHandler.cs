@@ -1,6 +1,5 @@
 using Application.Abstractions;
 using Domain.Entities;
-using Domain.Exceptions;
 using Domain.Factories;
 using Domain.Repositories;
 using MediatR;
@@ -11,15 +10,17 @@ namespace Application.Plays.PlayGame;
 public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameCommandResponse>
 {
     private readonly IRandomChoiceService _randomChoiceService;
+    private readonly IGameResultEvaluator _gameResulEvaluator;
     private readonly IGameResultRepository _gameResultRepository;
     private readonly ILogger<PlayGameCommandHandler> _logger;
 
     public PlayGameCommandHandler(IRandomChoiceService randomChoiceService, IGameResultRepository gameResultRepository,
-        ILogger<PlayGameCommandHandler> logger)
+        ILogger<PlayGameCommandHandler> logger, IGameResultEvaluator resultEvaluator)
     {
         _randomChoiceService = randomChoiceService;
         _gameResultRepository = gameResultRepository;
         _logger = logger;
+        _gameResulEvaluator = resultEvaluator;
     }
 
     public async Task<PlayGameCommandResponse> Handle(PlayGameCommand request, CancellationToken cancellationToken)
@@ -27,7 +28,7 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
         var playerChoice = ChoiceFactory.FromId(request.PlayerChoiceId);
         var computerChoice = await _randomChoiceService.GetRandomChoice();
         
-        var outcome = EvaluateGameResult(playerChoice, computerChoice);
+        var outcome = _gameResulEvaluator.Evaluate(playerChoice, computerChoice);
         
         _logger.LogInformation(
             $"Game played. PlayerChoice: {playerChoice.Name}, " +
@@ -36,15 +37,6 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
         SaveGameResult(request.PlayerId, playerChoice, computerChoice, outcome);
 
         return new PlayGameCommandResponse(outcome.Name, playerChoice.Id, computerChoice.Id);
-    }
-
-    private static Outcome EvaluateGameResult(Choice playerChoice, Choice computerChoice)
-    {
-        if (playerChoice == computerChoice) return Outcome.Tie;
-        if (playerChoice.Beats.Contains(computerChoice)) return Outcome.Win;
-        if (computerChoice.Beats.Contains(playerChoice)) return Outcome.Lose;
-        
-        throw new UndefinedGameLogicException(playerChoice, computerChoice);
     }
 
     private void SaveGameResult(string playerId, Choice playerChoice, Choice computerChoice, Outcome outcome)

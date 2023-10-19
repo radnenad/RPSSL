@@ -1,8 +1,7 @@
 using Application.Plays.PlayGame;
 using FluentValidation;
-using Xunit;
 
-namespace Web.API.IntegrationTests;
+namespace Application.IntegrationTests;
 
 public class PlayTests : BaseIntegrationTest
 {

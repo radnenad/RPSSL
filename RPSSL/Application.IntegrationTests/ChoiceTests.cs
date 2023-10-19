@@ -1,8 +1,7 @@
 using Application.Choices.GetAllChoices;
 using Application.Choices.GetRandomChoice;
-using Xunit;
 
-namespace Web.API.IntegrationTests;
+namespace Application.IntegrationTests;
 
 public class ChoiceTests : BaseIntegrationTest
 {

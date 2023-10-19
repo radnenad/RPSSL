@@ -2,9 +2,8 @@ using Application.Plays.PlayGame;
 using Application.Scoreboards.GetScoreboard;
 using Application.Scoreboards.ResetScoreboard;
 using FluentValidation;
-using Xunit;
 
-namespace Web.API.IntegrationTests;
+namespace Application.IntegrationTests;
 
 public class ScoreboardTests : BaseIntegrationTest
 {

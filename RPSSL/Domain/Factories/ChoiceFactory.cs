@@ -5,11 +5,11 @@ namespace Domain.Factories;
 
 public static class ChoiceFactory
 {
-    private static readonly Choice Rock = new(1, "rock");
-    private static readonly Choice Paper = new(2, "paper");
-    private static readonly Choice Scissors = new(3, "scissors");
-    private static readonly Choice Lizard = new(4, "lizard");
-    private static readonly Choice Spock = new(5, "spock");
+    public static readonly Choice Rock = new(1, "rock");
+    public static readonly Choice Paper = new(2, "paper");
+    public static readonly Choice Scissors = new(3, "scissors");
+    public static readonly Choice Lizard = new(4, "lizard");
+    public static readonly Choice Spock = new(5, "spock");
     
     private static readonly Dictionary<int, Choice> ChoicesById = new()
     {

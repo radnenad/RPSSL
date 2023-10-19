@@ -1,8 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
-namespace Web.API.IntegrationTests;
+namespace Application.IntegrationTests;
 
 public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
 {

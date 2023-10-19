@@ -11,6 +11,7 @@ public static class DependencyInjection
     public static void AddApplication(this IServiceCollection services)
     {
         services.AddTransient<IRandomChoiceService, RandomChoiceService>();
+        services.AddTransient<IGameResultEvaluator, GameResultEvaluator>();
         
         services.AddMediatR(config =>
         {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Web.API.IntegrationTests;
+namespace Application.IntegrationTests;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>
 {
