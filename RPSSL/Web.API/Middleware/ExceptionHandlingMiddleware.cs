@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Web.API.Middleware;
 
@@ -37,7 +36,7 @@ public class ExceptionHandlingMiddleware
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception ex, HttpStatusCode code, object errors)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception ex, HttpStatusCode code, object errors)
     {
         var result = JsonSerializer.Serialize(new
         {

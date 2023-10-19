@@ -27,8 +27,11 @@ public class RandomNumberService : IRandomNumberService
 
     private void SetupResilienceStrategy(IRandomNumberInternalGenerator internalGenerator, ILogger logger)
     {
+        const int handleEventsAllowedBeforeBreaking = 3;
+        const int durationOfBreakMinutes = 1;
+
         _circuitBreakerPolicy = Policy<int>.Handle<Exception>()
-            .CircuitBreakerAsync(3, TimeSpan.FromMinutes(1),
+            .CircuitBreakerAsync(handleEventsAllowedBeforeBreaking, TimeSpan.FromMinutes(durationOfBreakMinutes),
                 (ex, _) => { logger.LogWarning($"Circuit broken due to: {ex.Exception.Message}."); },
                 () => { logger.LogInformation("Circuit reset."); });
 

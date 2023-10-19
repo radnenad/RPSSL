@@ -8,9 +8,9 @@ namespace Persistence.Repositories;
 public class GameResultRepository : IGameResultRepository
 {
     private readonly ILogger<GameResultRepository> _logger;
-
     private static readonly ConcurrentDictionary<string, ConcurrentQueue<GameResult>> PlayerResults = new();
-
+    private const int MaxRecentResults = 10;
+    
     public GameResultRepository(ILogger<GameResultRepository> logger)
     {
         _logger = logger;
@@ -23,7 +23,7 @@ public class GameResultRepository : IGameResultRepository
 
         _logger.LogInformation($"Added game result for player {result.PlayerId}. Outcome: {result.Outcome.Name}");
 
-        while (playerQueue.Count > 10)
+        while (playerQueue.Count > MaxRecentResults)
         {
             playerQueue.TryDequeue(out _);
         }
@@ -32,15 +32,13 @@ public class GameResultRepository : IGameResultRepository
     public IEnumerable<GameResult> GetRecentResultsForPlayer(string playerId)
     {
         return PlayerResults.TryGetValue(playerId, out var playerQueue)
-            ? playerQueue.Reverse().Take(10)
+            ? playerQueue.Reverse().Take(MaxRecentResults)
             : Enumerable.Empty<GameResult>();
     }
 
-    public void ResetPlayerScoreboard(string playerId)
+    public bool ResetPlayerScoreboard(string playerId)
     {
-        if (PlayerResults.ContainsKey(playerId))
-        {
-            PlayerResults.TryRemove(playerId, out _);
-        }
+        return PlayerResults.ContainsKey(playerId) 
+               && PlayerResults.TryRemove(playerId, out _);
     }
 }

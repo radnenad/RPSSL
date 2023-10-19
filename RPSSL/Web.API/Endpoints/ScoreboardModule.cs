@@ -1,7 +1,6 @@
 using Application.Scoreboards.GetScoreboard;
 using Application.Scoreboards.ResetScoreboard;
 using Carter;
-using Domain.Entities;
 using MediatR;
 using Web.API.Extensions;
 
@@ -23,8 +22,11 @@ public class ScoreboardModule : ICarterModule
         {
             var playerId = context.GetUserId();
             var command = new ResetScoreBoardCommand(playerId);
-            await sender.Send(command);
-            return Results.NoContent();
+            var response = await sender.Send(command);
+            
+            return response.IsSuccess 
+                ? Results.NoContent() 
+                : Results.BadRequest(response.ErrorMessage);
         });
     }
 }

@@ -6,5 +6,5 @@ public interface IGameResultRepository
 {
     void AddResult(GameResult result);
     IEnumerable<GameResult> GetRecentResultsForPlayer(string playerId);
-    public void ResetPlayerScoreboard(string playerId);
+    public bool ResetPlayerScoreboard(string playerId);
 }

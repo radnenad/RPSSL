@@ -1,9 +1,10 @@
 using Domain.Repositories;
+using Domain.Shared;
 using MediatR;
 
 namespace Application.Scoreboards.ResetScoreboard;
 
-public class ResetScoreboardCommandHandler : IRequestHandler<ResetScoreBoardCommand>
+public class ResetScoreboardCommandHandler : IRequestHandler<ResetScoreBoardCommand, Result>
 {
     private readonly IGameResultRepository _resultRepository;
 
@@ -12,9 +13,10 @@ public class ResetScoreboardCommandHandler : IRequestHandler<ResetScoreBoardComm
         _resultRepository = resultRepository;
     }
 
-    public Task Handle(ResetScoreBoardCommand request, CancellationToken cancellationToken)
+    public Task<Result> Handle(ResetScoreBoardCommand request, CancellationToken cancellationToken)
     {
-        _resultRepository.ResetPlayerScoreboard(request.PlayerId);
-        return Task.CompletedTask;
+        return _resultRepository.ResetPlayerScoreboard(request.PlayerId)
+            ? Task.FromResult(Result.Success())
+            : Task.FromResult(Result.Failure("Player not found"));
     }
 }
