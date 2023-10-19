@@ -24,8 +24,8 @@ public class PlayTests : BaseIntegrationTest
         var response = await Sender.Send(request);
         
         Assert.NotNull(response);
-        Assert.InRange(response.ComputerChoice.Id, 1, 5);
-        Assert.InRange(response.Outcome.Id, 1, 3);
+        Assert.InRange(response.Computer, 1, 5);
+        Assert.Contains(response.Results, new[] {"win", "lose", "tie"});
     }
     
     //TODO async Task PlayGame_ShouldReturnError_WhenChoiceIsNotValid(int choiceId)

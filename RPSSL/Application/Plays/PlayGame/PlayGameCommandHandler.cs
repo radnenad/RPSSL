@@ -31,8 +31,8 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
             $"ComputerChoice: {computerChoice.Name}, Outcome: {outcome.Name}");
 
         SaveGameResult(request, computerChoice, outcome);
-        
-        return new PlayGameCommandResponse(request.PlayerChoice, computerChoice, outcome);
+
+        return new PlayGameCommandResponse(outcome.Name, request.PlayerChoice.Id, computerChoice.Id);
     }
 
     private static Outcome EvaluateGameResult(Choice playerChoice, Choice computerChoice)

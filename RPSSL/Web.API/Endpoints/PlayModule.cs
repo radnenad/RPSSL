@@ -3,6 +3,7 @@ using Carter;
 using Domain.Factories;
 using MediatR;
 using Web.API.Contracts;
+using Web.API.Extensions;
 
 namespace Web.API.Endpoints;
 
@@ -12,21 +13,17 @@ public class PlayModule : ICarterModule
     {
         app.MapPost("play", async (PlayGameRequest request, ISender sender, HttpContext context) =>
         {
-            var choice = ChoiceFactory.FromId(request.PlayerChoiceId);
-
-            var playerId = context.Items["UserIdentifier"] as string ?? string.Empty;
+            var playerId = context.GetUserId();
+            if (string.IsNullOrWhiteSpace(playerId)) // TODO  do with input validation or in middleware
+            {
+                return Results.BadRequest("Player cannot be identified"); 
+            }
             
-            //TODO validate
+            var choice = ChoiceFactory.FromId(request.PlayerChoiceId);
 
             var command = new PlayGameCommand(playerId, choice);
             var response = await sender.Send(command);
-            
-            var result = new GameResultDto(
-                response.Outcome.Name, 
-                response.PlayerChoice.Id, 
-                response.ComputerChoice.Id);
-            
-            return Results.Ok(result);
+            return Results.Ok(response);
         });
     }
 }

@@ -1,6 +1,6 @@
 using Application.Scoreboards.GetScoreboard;
+using Application.Scoreboards.ResetScoreboard;
 using Carter;
-using Domain.Repositories;
 using MediatR;
 using Web.API.Extensions;
 
@@ -19,13 +19,14 @@ public class ScoreboardModule : ICarterModule
             return Results.Ok(response);
         });
 
-        app.MapPut("scoreboard/reset", (IGameResultRepository repository, HttpContext context) =>
+        app.MapPut("scoreboard/reset", async (ISender sender, HttpContext context) =>
         {
             var playerId = context.GetUserId();
-
-            repository.ResetPlayerScoreboard(playerId);
-
-            return Results.Ok();
+            
+            var command = new ResetScoreBoardCommand(playerId);
+            var result = await sender.Send(command);
+            
+            return result.IsSuccess ? Results.Ok() : Results.BadRequest();
         });
     }
 }
