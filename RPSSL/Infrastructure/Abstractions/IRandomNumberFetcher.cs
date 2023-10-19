@@ -1,6 +1,8 @@
+using Domain.Entities;
+
 namespace Infrastructure.Abstractions;
 
 public interface IRandomNumberFetcher
 {
-    Task<int> FetchRandomNumberAsync();
+    Task<RandomNumber> FetchRandomNumberAsync();
 }

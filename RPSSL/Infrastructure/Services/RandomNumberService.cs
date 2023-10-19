@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Infrastructure.Abstractions;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -9,8 +10,8 @@ namespace Infrastructure.Services;
 public class RandomNumberService : IRandomNumberService
 {
     private readonly IRandomNumberFetcher _fetcher;
-    private AsyncCircuitBreakerPolicy<int>? _circuitBreakerPolicy;
-    private AsyncFallbackPolicy<int>? _fallbackPolicy;
+    private AsyncCircuitBreakerPolicy<RandomNumber>? _circuitBreakerPolicy;
+    private AsyncFallbackPolicy<RandomNumber>? _fallbackPolicy;
 
     public RandomNumberService(IRandomNumberFetcher fetcher, IRandomNumberInternalGenerator internalGenerator,
         ILogger<RandomNumberService> logger)
@@ -19,7 +20,7 @@ public class RandomNumberService : IRandomNumberService
         SetupResilienceStrategy(internalGenerator, logger);
     }
 
-    public async Task<int> GetRandomNumber()
+    public async Task<RandomNumber> GetRandomNumber()
     {
         return await _fallbackPolicy!.WrapAsync(_circuitBreakerPolicy)
             .ExecuteAsync(() => _fetcher.FetchRandomNumberAsync());
@@ -30,12 +31,16 @@ public class RandomNumberService : IRandomNumberService
         const int handleEventsAllowedBeforeBreaking = 3;
         const int durationOfBreakMinutes = 1;
 
-        _circuitBreakerPolicy = Policy<int>.Handle<Exception>()
-            .CircuitBreakerAsync(handleEventsAllowedBeforeBreaking, TimeSpan.FromMinutes(durationOfBreakMinutes),
+        _circuitBreakerPolicy = Policy<RandomNumber>
+            .Handle<Exception>()
+            .CircuitBreakerAsync(
+                handleEventsAllowedBeforeBreaking, 
+                TimeSpan.FromMinutes(durationOfBreakMinutes),
                 (ex, _) => { logger.LogWarning($"Circuit broken due to: {ex.Exception.Message}."); },
                 () => { logger.LogInformation("Circuit reset."); });
 
-        _fallbackPolicy = Policy<int>.Handle<Exception>()
+        _fallbackPolicy = Policy<RandomNumber>
+            .Handle<Exception>()
             .FallbackAsync(_ =>
             {
                 logger.LogWarning("Falling back to internal random number generator due to external service failure.");

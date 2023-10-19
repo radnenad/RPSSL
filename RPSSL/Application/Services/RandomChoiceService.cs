@@ -17,6 +17,6 @@ public class RandomChoiceService : IRandomChoiceService
     public async Task<Choice> GetRandomChoice()
     {
         var randomNumber = await _randomNumberService.GetRandomNumber();
-        return ChoiceFactory.FromRandomNumber(randomNumber);
+        return ChoiceFactory.FromRandomNumber(randomNumber.Value);
     }
 }

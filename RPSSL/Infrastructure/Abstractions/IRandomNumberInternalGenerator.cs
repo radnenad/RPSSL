@@ -1,6 +1,8 @@
+using Domain.Entities;
+
 namespace Infrastructure.Abstractions;
 
 public interface IRandomNumberInternalGenerator
 {
-    int Generate();
+    RandomNumber Generate();
 }
