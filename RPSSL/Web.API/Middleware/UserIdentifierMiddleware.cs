@@ -6,17 +6,21 @@ namespace Web.API.Middleware;
 public class UserIdentifierMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<UserIdentifierMiddleware> _logger;
 
-    public UserIdentifierMiddleware(RequestDelegate next)
+    public UserIdentifierMiddleware(RequestDelegate next, ILogger<UserIdentifierMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
         if (IsRelevantEndpoint(context.Request.Path.Value))
         {
-            context.Items["UserIdentifier"] = GetHashedIdentifier(context);
+            var userIdentifier = GetHashedIdentifier(context);
+            context.Items["UserIdentifier"] = userIdentifier;
+            _logger.LogInformation($"Determined user identifier: {userIdentifier}");
         }
 
         await _next(context);

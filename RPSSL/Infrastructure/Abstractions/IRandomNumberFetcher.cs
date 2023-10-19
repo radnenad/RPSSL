@@ -2,5 +2,5 @@ namespace Infrastructure.Abstractions;
 
 public interface IRandomNumberFetcher
 {
-    Task<string> FetchRandomNumberAsync();
+    Task<int> FetchRandomNumberAsync();
 }

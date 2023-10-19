@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Infrastructure.Abstractions;
 
 namespace Infrastructure.Services;
@@ -11,10 +12,17 @@ public class RandomNumberFetcher : IRandomNumberFetcher
         _httpClient = httpClientFactory.CreateClient("RandomNumberHttpClient");
     }
 
-    public async Task<string> FetchRandomNumberAsync()
+    public async Task<int> FetchRandomNumberAsync()
     {
         var response = await _httpClient.GetAsync("/random");
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync();
+        return ParseRandomNumber(content);
+    }
+    
+    private static int ParseRandomNumber(string content)
+    {
+        var jsonDoc = JsonDocument.Parse(content);
+        return jsonDoc.RootElement.GetProperty("random_number").GetInt32();
     }
 }
