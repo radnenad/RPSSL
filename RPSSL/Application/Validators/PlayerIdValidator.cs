@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Shared;
+namespace Application.Validators;
 
 public class PlayerIdValidator : AbstractValidator<string>
 {

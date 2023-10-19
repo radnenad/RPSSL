@@ -1,4 +1,4 @@
-using Application.Shared;
+using Application.Validators;
 using FluentValidation;
 
 namespace Application.Scoreboards.ResetScoreboard;
