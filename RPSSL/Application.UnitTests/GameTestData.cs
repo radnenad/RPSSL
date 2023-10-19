@@ -41,7 +41,7 @@ public class GameTestData : IEnumerable<object[]>
         new object[] { ChoiceFactory.Spock, ChoiceFactory.Paper, Outcome.Lose },
         new object[] { ChoiceFactory.Spock, ChoiceFactory.Scissors, Outcome.Win },
         new object[] { ChoiceFactory.Spock, ChoiceFactory.Lizard, Outcome.Lose },
-        new object[] { ChoiceFactory.Spock, ChoiceFactory.Spock, Outcome.Tie },
+        new object[] { ChoiceFactory.Spock, ChoiceFactory.Spock, Outcome.Tie }
     };
 
     public IEnumerator<object[]> GetEnumerator() => Data.GetEnumerator();
