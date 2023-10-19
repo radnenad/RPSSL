@@ -1,6 +1,7 @@
 using Application.Scoreboards.GetScoreboard;
 using Application.Scoreboards.ResetScoreboard;
 using Carter;
+using Domain.Entities;
 using MediatR;
 using Web.API.Extensions;
 
@@ -13,7 +14,6 @@ public class ScoreboardModule : ICarterModule
         app.MapGet("scoreboard", async (ISender sender, HttpContext context) =>
         {
             var playerId = context.GetUserId();
-
             var query = new GetScoreboardQuery(playerId);
             var response = await sender.Send(query);
             return Results.Ok(response);
@@ -22,11 +22,9 @@ public class ScoreboardModule : ICarterModule
         app.MapPut("scoreboard/reset", async (ISender sender, HttpContext context) =>
         {
             var playerId = context.GetUserId();
-            
             var command = new ResetScoreBoardCommand(playerId);
-            var result = await sender.Send(command);
-            
-            return result.IsSuccess ? Results.Ok() : Results.BadRequest();
+            await sender.Send(command);
+            return Results.NoContent();
         });
     }
 }

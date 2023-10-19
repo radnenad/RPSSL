@@ -5,6 +5,8 @@ public class Result<T>
     public bool IsSuccess { get; }
     public T? Value { get; }
     public string? ErrorMessage { get; }
+    
+    public bool IsFailure => !IsSuccess;
 
     protected Result(bool isSuccess, T? value = default, string? errorMessage = null)
     {
@@ -13,8 +15,8 @@ public class Result<T>
         ErrorMessage = errorMessage;
     }
 
-    public static Result<T> Success(T value) => new Result<T>(true, value);
-    public static Result<T> Failure(string errorMessage) => new Result<T>(false, default, errorMessage);
+    public static Result<T> Success(T value) => new(true, value);
+    public static Result<T> Failure(string? errorMessage) => new(false, default, errorMessage);
 }
 
 public class Result : Result<object?>
@@ -23,6 +25,6 @@ public class Result : Result<object?>
     {
     }
 
-    public static Result Success() => new Result(true);
-    public new static Result Failure(string errorMessage) => new Result(false, errorMessage);
+    public static Result Success() => new(true);
+    public new static Result Failure(string errorMessage) => new(false, errorMessage);
 }
