@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Exceptions;
 
 namespace Domain.Factories;
 
@@ -33,13 +34,13 @@ public static class ChoiceFactory
         if (ChoicesById.TryGetValue(id, out var choice))
             return choice;
 
-        throw new ArgumentException($"Invalid choice ID: {id}");
+        throw new InvalidChoiceException(id);
     }
 
     public static Choice FromRandomNumber(int randomNumber)
     {
         if (randomNumber is < 1 or > 100)
-            throw new ArgumentOutOfRangeException(nameof(randomNumber));
+            throw new RandomNumberOutOfRangeException(randomNumber);
 
         // With modulo operator we ensure that the number is between 1 and 5.
         var choiceId = randomNumber % 5 + 1; 

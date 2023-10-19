@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Factories;
 using Domain.Repositories;
 using MediatR;
@@ -40,7 +41,10 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
     private static Outcome EvaluateGameResult(Choice playerChoice, Choice computerChoice)
     {
         if (playerChoice == computerChoice) return Outcome.Tie;
-        return playerChoice.Beats.Contains(computerChoice) ? Outcome.Win : Outcome.Lose;
+        if (playerChoice.Beats.Contains(computerChoice)) return Outcome.Win;
+        if (computerChoice.Beats.Contains(playerChoice)) return Outcome.Lose;
+        
+        throw new UndefinedGameLogicException(playerChoice, computerChoice);
     }
 
     private void SaveGameResult(string playerId, Choice playerChoice, Choice computerChoice, Outcome outcome)
