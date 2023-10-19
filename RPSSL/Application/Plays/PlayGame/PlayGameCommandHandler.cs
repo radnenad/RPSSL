@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Domain.Entities;
+using Domain.Factories;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -22,17 +23,18 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
 
     public async Task<PlayGameCommandResponse> Handle(PlayGameCommand request, CancellationToken cancellationToken)
     {
+        var playerChoice = ChoiceFactory.FromId(request.PlayerChoiceId);
         var computerChoice = await _randomChoiceService.GetRandomChoice();
         
-        var outcome = EvaluateGameResult(request.PlayerChoice, computerChoice);
+        var outcome = EvaluateGameResult(playerChoice, computerChoice);
         
         _logger.LogInformation(
-            $"Game played. PlayerChoice: {request.PlayerChoice.Name}, " +
+            $"Game played. PlayerChoice: {playerChoice.Name}, " +
             $"ComputerChoice: {computerChoice.Name}, Outcome: {outcome.Name}");
 
-        SaveGameResult(request, computerChoice, outcome);
+        SaveGameResult(request.PlayerId, playerChoice, computerChoice, outcome);
 
-        return new PlayGameCommandResponse(outcome.Name, request.PlayerChoice.Id, computerChoice.Id);
+        return new PlayGameCommandResponse(outcome.Name, playerChoice.Id, computerChoice.Id);
     }
 
     private static Outcome EvaluateGameResult(Choice playerChoice, Choice computerChoice)
@@ -41,9 +43,9 @@ public class PlayGameCommandHandler : IRequestHandler<PlayGameCommand, PlayGameC
         return playerChoice.Beats.Contains(computerChoice) ? Outcome.Win : Outcome.Lose;
     }
 
-    private void SaveGameResult(PlayGameCommand request, Choice computerChoice, Outcome outcome)
+    private void SaveGameResult(string playerId, Choice playerChoice, Choice computerChoice, Outcome outcome)
     {
-        var gameResult = new GameResult(request.PlayerId, request.PlayerChoice, computerChoice, outcome);
+        var gameResult = new GameResult(playerId, playerChoice, computerChoice, outcome);
         _gameResultRepository.AddResult(gameResult);
     }
 }
